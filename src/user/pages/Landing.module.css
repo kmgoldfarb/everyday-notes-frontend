@@ -1,0 +1,29 @@
+.body {
+  height: 100vh;
+  width: 100vw;
+  background-image: url('../../images/bluewaves.svg');
+  background-size: cover;
+  color: white;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.home {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90%;
+  overflow-x: hidden;
+}
+
+.button {
+  margin-right: 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .home {
+    max-width: 50%;
+  }
+}
