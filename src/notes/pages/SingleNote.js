@@ -38,7 +38,7 @@ const SingleNote = (props) => {
       setIsLoading(false);
       setError(err.message);
     }
-  });
+  }, []);
 
   useEffect(() => {
     getNoteById();
