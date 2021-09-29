@@ -100,7 +100,7 @@ const EditNote = (props) => {
     moodPlaceholder = loadedNote.mood;
     journalPlaceholder = loadedNote.journal;
     datePlaceholder = loadedNote.date;
-    imagePlaceholder;
+    imagePlaceholder = "";
     if (loadedNote.image) {
       imagePlaceholder = loadedNote.image;
     }
