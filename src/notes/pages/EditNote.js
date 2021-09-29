@@ -26,32 +26,33 @@ const EditNote = (props) => {
   let datePlaceholder;
   let imagePlaceholder;
 
-  useEffect(() => {
-    const getNoteById = useCallback(async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_SERVER_URL}/notes/${nid}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: "Bearer: " + token,
-            },
-          }
-        );
-        const responseData = await response.json();
-        if (!response.ok) {
-          throw new Error(responseData.message);
+  const getNoteById = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/notes/${nid}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer: " + token,
+          },
         }
-        setLoadedNote(responseData.note);
-        setStartDate(new Date(responseData.note.date));
-        console.log(responseData.note);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        setError(err.message);
+      );
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData.message);
       }
-    });
+      setLoadedNote(responseData.note);
+      setStartDate(new Date(responseData.note.date));
+      console.log(responseData.note);
+      setIsLoading(false);
+    } catch (err) {
+      setIsLoading(false);
+      setError(err.message);
+    }
+  });
+
+  useEffect(() => {
     getNoteById();
   }, [getNoteById]);
 

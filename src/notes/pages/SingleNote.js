@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useParams, useHistory } from "react-router";
-import { Card, Button, Container, Modal } from "react-bootstrap";
+import { Card, Button, Container, Modal, Alert } from "react-bootstrap";
 import EditNote from "./EditNote";
 
 const SingleNote = (props) => {
