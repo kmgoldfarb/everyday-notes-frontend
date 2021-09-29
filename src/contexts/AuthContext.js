@@ -1,5 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
+import React, { useCallback, useContext, useState } from "react";
 
 const AuthCtx = React.createContext();
 
@@ -16,17 +15,17 @@ export function AuthProvider({ children }) {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/users/signup`,
       {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           email,
           password,
         }),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
-    ).then(res => res.json({ status: 'ok' }));
-    if (response.status !== 'ok') {
+    ).then((res) => res.json({ status: "ok" }));
+    if (response.status !== "ok") {
       alert(response.error);
     }
   };
@@ -38,7 +37,7 @@ export function AuthProvider({ children }) {
       expiration || new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpiration(tokenExpirationDate);
     localStorage.setItem(
-      'userData',
+      "userData",
       JSON.stringify({
         token: token,
         userId: userId,
@@ -49,14 +48,14 @@ export function AuthProvider({ children }) {
 
   const changePassword = async (newPass, token) => {
     await fetch(`${process.env.REACT_APP_SERVER_URL}/users/change-password`, {
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify({
         newpassword: newPass,
         token: token,
       }),
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer: ' + token,
+        "Content-Type": "application/json",
+        Authorization: "Bearer: " + token,
       },
     });
   };
@@ -65,7 +64,7 @@ export function AuthProvider({ children }) {
     setUserId(null);
     setToken(null);
     setTokenExpiration(null);
-    localStorage.removeItem('userData');
+    localStorage.removeItem("userData");
   }, []);
 
   const value = {
