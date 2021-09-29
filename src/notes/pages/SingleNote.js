@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useParams, useHistory } from 'react-router';
-import { Card, Button, Container, Modal } from 'react-bootstrap';
-import EditNote from './EditNote';
+import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { useParams, useHistory } from "react-router";
+import { Card, Button, Container, Modal } from "react-bootstrap";
+import EditNote from "./EditNote";
 
-const SingleNote = props => {
+const SingleNote = (props) => {
   const [note, setNote] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
@@ -15,15 +15,15 @@ const SingleNote = props => {
   const { token } = useAuth();
   const noteId = nid;
 
-  const getNoteById = async () => {
+  const getNoteById = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_URL}/notes/${noteId}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            Authorization: 'Bearer: ' + token,
+            Authorization: "Bearer: " + token,
           },
         }
       );
@@ -38,25 +38,25 @@ const SingleNote = props => {
       setIsLoading(false);
       setError(err.message);
     }
-  };
+  });
 
   useEffect(() => {
     getNoteById();
-  }, []);
+  }, [getNoteById]);
 
-  const deleteNoteHandler = async event => {
+  const deleteNoteHandler = async (event) => {
     event.preventDefault();
     try {
       await fetch(`${process.env.REACT_APP_SERVER_URL}/notes/${noteId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          Authorization: 'Bearer: ' + token,
+          Authorization: "Bearer: " + token,
         },
       });
     } catch (err) {
       console.log(err);
     }
-    history.push('/dashboard');
+    history.push("/dashboard");
   };
 
   const showDeleteModalHandler = () => {
@@ -72,22 +72,23 @@ const SingleNote = props => {
     setShowEditModal(false);
   };
   const backToDashboard = () => {
-    history.push('/dashboard');
+    history.push("/dashboard");
   };
 
   let fullNote;
   if (!isLoading && note) {
     const dateObj = new Date(note.date);
     const options = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     };
-    const readDate = dateObj.toLocaleDateString('en-US', options);
+    const readDate = dateObj.toLocaleDateString("en-US", options);
     fullNote = (
-      <Card border="primary" style={{ margin: '2rem' }}>
+      <Card border="primary" style={{ margin: "2rem" }}>
         <Card.Header as="h3">{readDate}</Card.Header>
+        {error && <Alert variant="danger">{error}</Alert>}
         <Card.Body>
           <h5>Journal:</h5>
           <p>{note.journal}</p>
@@ -101,14 +102,14 @@ const SingleNote = props => {
             <Card.Img
               src={`${process.env.REACT_APP_ASSET_URL}/${note.image}`}
               className="mb-4"
-              style={{ maxWidth: '600px' }}
+              style={{ maxWidth: "600px" }}
             />
           )}
         </Card.Body>
         <Card.Footer>
           <Button
             variant="info"
-            style={{ marginRight: '1rem', color: 'white' }}
+            style={{ marginRight: "1rem", color: "white" }}
             onClick={showEditModalHandler}
           >
             Edit
@@ -154,7 +155,7 @@ const SingleNote = props => {
         {!isLoading && note && fullNote}
         <Button
           onClick={backToDashboard}
-          style={{ marginLeft: '2rem', marginBottom: '1rem' }}
+          style={{ marginLeft: "2rem", marginBottom: "1rem" }}
         >
           Go back to your notes
         </Button>

@@ -1,5 +1,5 @@
 import { useAuth } from "../../contexts/AuthContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { useParams, useHistory } from "react-router";
@@ -27,7 +27,7 @@ const EditNote = (props) => {
   let imagePlaceholder;
 
   useEffect(() => {
-    const getNoteById = async () => {
+    const getNoteById = useCallback(async () => {
       setIsLoading(true);
       try {
         const response = await fetch(
@@ -51,9 +51,9 @@ const EditNote = (props) => {
         setIsLoading(false);
         setError(err.message);
       }
-    };
+    });
     getNoteById();
-  }, []);
+  }, [getNoteById]);
 
   const imageSelectHandler = (event) => {
     if (event.target.files && event.target.files.length === 1) {
