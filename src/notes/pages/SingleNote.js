@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useParams, useHistory } from "react-router";
-import { Card, Button, Container, Modal, Alert } from "react-bootstrap";
+import { Card, Button, Container, Modal } from "react-bootstrap";
 import EditNote from "./EditNote";
 
 const SingleNote = (props) => {
@@ -15,7 +15,7 @@ const SingleNote = (props) => {
   const { token } = useAuth();
   const noteId = nid;
 
-  const getNoteById = useCallback(async () => {
+  const getNoteById = async () => {
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -38,11 +38,11 @@ const SingleNote = (props) => {
       setIsLoading(false);
       setError(err.message);
     }
-  }, []);
+  };
 
   useEffect(() => {
     getNoteById();
-  }, [getNoteById]);
+  }, []);
 
   const deleteNoteHandler = async (event) => {
     event.preventDefault();
@@ -88,7 +88,6 @@ const SingleNote = (props) => {
     fullNote = (
       <Card border="primary" style={{ margin: "2rem" }}>
         <Card.Header as="h3">{readDate}</Card.Header>
-        {error && <Alert variant="danger">{error}</Alert>}
         <Card.Body>
           <h5>Journal:</h5>
           <p>{note.journal}</p>

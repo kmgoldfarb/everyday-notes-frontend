@@ -1,5 +1,5 @@
 import { useAuth } from "../../contexts/AuthContext";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { useParams, useHistory } from "react-router";
@@ -26,35 +26,34 @@ const EditNote = (props) => {
   let datePlaceholder;
   let imagePlaceholder;
 
-  const getNoteById = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/notes/${nid}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: "Bearer: " + token,
-          },
-        }
-      );
-      const responseData = await response.json();
-      if (!response.ok) {
-        throw new Error(responseData.message);
-      }
-      setLoadedNote(responseData.note);
-      setStartDate(new Date(responseData.note.date));
-      console.log(responseData.note);
-      setIsLoading(false);
-    } catch (err) {
-      setIsLoading(false);
-      setError(err.message);
-    }
-  }, []);
-
   useEffect(() => {
+    const getNoteById = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVER_URL}/notes/${nid}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer: " + token,
+            },
+          }
+        );
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+        setLoadedNote(responseData.note);
+        setStartDate(new Date(responseData.note.date));
+        console.log(responseData.note);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        setError(err.message);
+      }
+    };
     getNoteById();
-  }, [getNoteById]);
+  }, []);
 
   const imageSelectHandler = (event) => {
     if (event.target.files && event.target.files.length === 1) {
@@ -100,7 +99,6 @@ const EditNote = (props) => {
     moodPlaceholder = loadedNote.mood;
     journalPlaceholder = loadedNote.journal;
     datePlaceholder = loadedNote.date;
-    imagePlaceholder = "";
     if (loadedNote.image) {
       imagePlaceholder = loadedNote.image;
     }
