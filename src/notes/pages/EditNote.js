@@ -45,7 +45,6 @@ const EditNote = (props) => {
         }
         setLoadedNote(responseData.note);
         setStartDate(new Date(responseData.note.date));
-        console.log(responseData.note);
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
@@ -58,7 +57,6 @@ const EditNote = (props) => {
   const imageSelectHandler = (event) => {
     if (event.target.files && event.target.files.length === 1) {
       const selectedImage = event.target.files[0];
-      console.log(selectedImage);
       setImage(selectedImage);
     } else {
       alert("Please pick a valid image.");
@@ -179,7 +177,11 @@ const EditNote = (props) => {
                 onChange={imageSelectHandler}
               />
             </Form.Group>
-            <Button variant="secondary" style={{ marginRight: "1rem" }}>
+            <Button
+              variant="secondary"
+              style={{ marginRight: "1rem" }}
+              onClick={props.closeEditModal}
+            >
               Cancel
             </Button>
             <Button

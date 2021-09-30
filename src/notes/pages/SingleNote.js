@@ -31,7 +31,6 @@ const SingleNote = (props) => {
       if (!response.ok) {
         throw new Error(responseData.message);
       }
-      console.log(responseData);
       setNote(responseData.note);
       setIsLoading(false);
     } catch (err) {
