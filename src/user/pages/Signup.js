@@ -1,18 +1,65 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Card, Form, Button, Container, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
+import { auth, createUser } from '../../firebase';
 
 const Signup = () => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { login } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const passwordConfirmRef = useRef();
 
-  async function handleSubmit(event) {
+  async function handleSignup(event) {
+    event.preventDefault();
+    let user;
+    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+      return setError('Passwords do not match.');
+    }
+    try {
+      setError('');
+      setLoading(true);
+      await createUser(
+        auth,
+        emailRef.current.value,
+        passwordRef.current.value
+      ).then((userCredential) => {
+        const user = userCredential.user;
+        fetch(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: emailRef.current.value.toLowerCase(),
+            uid: user.uid,
+          }),
+        });
+      });
+    } catch (err) {
+      console.log(err);
+      setError('Failed to create an account.');
+    }
+    setLoading(false);
+    history.push('/dashboard');
+  }
+
+  /*  async function createUser(uid) {
+    await fetch(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: emailRef.current.value.toLowerCase(),
+        id: uid,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } */
+
+  /* async function handleSubmit(event) {
     event.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Passwords do not match.');
@@ -41,7 +88,7 @@ const Signup = () => {
       setError('Failed to create account.');
     }
     setLoading(false);
-  }
+  } */
 
   return (
     <Container
@@ -52,7 +99,7 @@ const Signup = () => {
         <Card.Body>
           <h2 className="text-center mb-2">Sign Up</h2>
           {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleSignup}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />

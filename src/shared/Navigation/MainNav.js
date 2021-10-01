@@ -4,16 +4,16 @@ import { useAuth } from '../../contexts/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
 
 const MainNav = () => {
-  const { token } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <Navbar collapseOnSelect expand="md" style={{ margin: '1rem' }}>
-      <LinkContainer to={token ? '/dashboard' : '/'}>
+      <LinkContainer to={currentUser ? '/dashboard' : '/'}>
         <Navbar.Brand>Everyday Notes</Navbar.Brand>
       </LinkContainer>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
-        {token && (
+        {currentUser && (
           <Nav>
             <Nav.Item>
               <Nav.Link>
@@ -37,7 +37,7 @@ const MainNav = () => {
             </Nav.Item>
           </Nav>
         )}
-        {!token && (
+        {!currentUser && (
           <Nav>
             <Nav.Item>
               <Nav.Link>

@@ -2,23 +2,24 @@ import { useEffect, useState } from 'react';
 import NotesList from '../../notes/components/NotesList';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Dashboard = () => {
   const [notes, setNotes] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
+  const { currentUser } = useAuth();
   const history = useHistory();
 
   useEffect(() => {
     const getNotes = async () => {
       setIsLoading(true);
-      const userData = JSON.parse(localStorage.getItem('userData'));
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_SERVER_URL}/users/${userData.userId}`,
+          `${process.env.REACT_APP_SERVER_URL}/users/${currentUser.uid}`,
           {
             method: 'GET',
-            headers: { Authorization: 'Bearer: ' + userData.token },
+            headers: { Authorization: 'Bearer: ' + currentUser.accessToken },
           }
         );
         const responseData = await response.json();

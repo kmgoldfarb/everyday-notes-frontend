@@ -1,8 +1,8 @@
-import { useAuth } from "../../contexts/AuthContext";
-import { useState, useEffect, useRef } from "react";
-import { Container, Form, Button, Card, Alert } from "react-bootstrap";
-import DatePicker from "react-datepicker";
-import { useParams, useHistory } from "react-router";
+import { useAuth } from '../../contexts/AuthContext';
+import { useState, useEffect, useRef } from 'react';
+import { Container, Form, Button, Card, Alert } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
+import { useParams, useHistory } from 'react-router';
 
 const EditNote = (props) => {
   const [startDate, setStartDate] = useState();
@@ -10,7 +10,7 @@ const EditNote = (props) => {
   const [error, setError] = useState();
   const [loadedNote, setLoadedNote] = useState();
   const [image, setImage] = useState();
-  const { token, userId } = useAuth();
+  const { currentUser } = useAuth();
   const { nid } = useParams();
   const history = useHistory();
   const actionRef = useRef();
@@ -33,9 +33,9 @@ const EditNote = (props) => {
         const response = await fetch(
           `${process.env.REACT_APP_SERVER_URL}/notes/${nid}`,
           {
-            method: "GET",
+            method: 'GET',
             headers: {
-              Authorization: "Bearer: " + token,
+              Authorization: 'Bearer: ' + currentUser.accessToken,
             },
           }
         );
@@ -59,7 +59,7 @@ const EditNote = (props) => {
       const selectedImage = event.target.files[0];
       setImage(selectedImage);
     } else {
-      alert("Please pick a valid image.");
+      alert('Please pick a valid image.');
     }
   };
 
@@ -67,20 +67,20 @@ const EditNote = (props) => {
     setIsLoading(true);
     try {
       const formData = new FormData();
-      formData.append("date", startDate);
-      formData.append("action", actionRef.current.value);
-      formData.append("gratitude", gratitudeRef.current.value);
-      formData.append("mood", moodRef.current.value);
-      formData.append("journal", journalRef.current.value);
-      formData.append("creator", userId);
+      formData.append('date', startDate);
+      formData.append('action', actionRef.current.value);
+      formData.append('gratitude', gratitudeRef.current.value);
+      formData.append('mood', moodRef.current.value);
+      formData.append('journal', journalRef.current.value);
+      formData.append('creator', currentUser.uid);
       if (image) {
-        formData.append("image", image);
+        formData.append('image', image);
       }
       await fetch(`${process.env.REACT_APP_SERVER_URL}/notes/${nid}`, {
-        method: "PATCH",
+        method: 'PATCH',
         body: formData,
         headers: {
-          Authorization: "Bearer: " + token,
+          Authorization: 'Bearer: ' + currentUser.accessToken,
         },
       });
     } catch (err) {
@@ -88,7 +88,7 @@ const EditNote = (props) => {
     }
     setIsLoading(false);
     props.closeEditModal();
-    history.push("/dashboard");
+    history.push('/dashboard');
   };
 
   if (!isLoading && loadedNote) {
@@ -105,7 +105,7 @@ const EditNote = (props) => {
   const noteForm = (
     <Container
       className="align-items-center justify-content-center"
-      style={{ maxWidth: "800px" }}
+      style={{ maxWidth: '800px' }}
     >
       <Card className="mt-4 mb-4">
         <Card.Body>
@@ -147,7 +147,7 @@ const EditNote = (props) => {
               />
               <Form.Text className="text-muted mt-1">
                 Do you need some help figuring out what you're feeling? Check
-                out{" "}
+                out{' '}
                 <a
                   href="https://feelingswheel.com/"
                   rel="noreferrer"
@@ -162,7 +162,7 @@ const EditNote = (props) => {
               <Form.Control
                 as="textarea"
                 defaultValue={journalPlaceholder}
-                style={{ height: "100px" }}
+                style={{ height: '100px' }}
                 ref={journalRef}
                 required
               />
@@ -179,7 +179,7 @@ const EditNote = (props) => {
             </Form.Group>
             <Button
               variant="secondary"
-              style={{ marginRight: "1rem" }}
+              style={{ marginRight: '1rem' }}
               onClick={props.closeEditModal}
             >
               Cancel
@@ -188,7 +188,7 @@ const EditNote = (props) => {
               variant="info"
               disabled={isLoading}
               type="submit"
-              style={{ color: "white" }}
+              style={{ color: 'white' }}
             >
               Update entry
             </Button>

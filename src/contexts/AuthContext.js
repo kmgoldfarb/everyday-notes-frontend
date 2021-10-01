@@ -1,4 +1,6 @@
-import React, { useCallback, useContext, useState } from "react";
+import { onAuthStateChanged } from '@firebase/auth';
+import React, { useEffect, useContext, useState } from 'react';
+import { auth, createUser, signInUser, resetPassword } from '../firebase';
 
 const AuthCtx = React.createContext();
 
@@ -7,7 +9,47 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [tokenExpiration, setTokenExpiration] = useState();
+  const [currentUser, setCurrentUser] = useState();
+  const [loading, setLoading] = useState(true);
+
+  const signup = (email, password) => {
+    return createUser(auth, email, password);
+  };
+
+  const login = (email, password) => {
+    return signInUser(auth, email, password);
+  };
+
+  const logout = () => {
+    return auth.signOut();
+  };
+
+  const forgotPassword = (email) => {
+    return resetPassword(auth, email);
+  };
+
+  const getCurrentUser = () => {
+    const user = auth.currentUser;
+    return user;
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  const value = {
+    currentUser,
+    signup,
+    login,
+    logout,
+    forgotPassword,
+    getCurrentUser,
+  };
+  /*   const [tokenExpiration, setTokenExpiration] = useState();
   const [userId, setUserId] = useState();
   const [token, setToken] = useState();
 
@@ -66,15 +108,9 @@ export function AuthProvider({ children }) {
     setTokenExpiration(null);
     localStorage.removeItem("userData");
   }, []);
+ */
 
-  const value = {
-    userId,
-    token,
-    signup,
-    login,
-    changePassword,
-    logout,
-    tokenExpiration,
-  };
-  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
+  return (
+    <AuthCtx.Provider value={value}>{!loading && children}</AuthCtx.Provider>
+  );
 }
