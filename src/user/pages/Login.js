@@ -6,12 +6,25 @@ import { useAuth } from '../../contexts/AuthContext';
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
-  async function handleSubmit(event) {
+  async function handleLogin(event) {
+    event.preventDefault();
+    try {
+      setError('');
+      setLoading(true);
+      await login(emailRef.current.value, passwordRef.current.value);
+      history.push('/dashboard');
+    } catch (err) {
+      setError('Failed to login.');
+    }
+    setLoading(false);
+  }
+
+  /* async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
     setError('');
@@ -42,7 +55,7 @@ const Login = () => {
     } catch {
       setError('There was a problem logging in. Please try again.');
     }
-  }
+  } */
 
   return (
     <Container
@@ -53,7 +66,7 @@ const Login = () => {
         <Card.Body>
           <h2 className="text-center mb-2">Log In</h2>
           {error && <Alert variant="danger">{error}</Alert>}
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleLogin}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>
               <Form.Control type="email" ref={emailRef} required />
@@ -70,6 +83,9 @@ const Login = () => {
       </Card>
       <div className="w-100 text-center mt-4">
         Need an account? <Link to="/signup">Sign up here.</Link>
+      </div>
+      <div className="w-100 text-center mt-4">
+        <Link to="/forgot-password">Forgot password?</Link>
       </div>
     </Container>
   );

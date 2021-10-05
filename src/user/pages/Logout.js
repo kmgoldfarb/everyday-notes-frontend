@@ -10,7 +10,7 @@ const Logout = () => {
     logout();
     setIsLoading(false);
     history.push('/');
-  }, [logout, history]);
+  }, []);
 
   return <>{isLoading && <p>Logging you out...</p>}</>;
 };

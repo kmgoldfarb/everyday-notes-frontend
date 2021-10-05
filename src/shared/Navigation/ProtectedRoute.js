@@ -1,12 +1,13 @@
 import { Route, Redirect } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
-  const userData = localStorage.getItem('userData');
+  const { currentUser } = useAuth();
   return (
     <Route
       {...rest}
       render={() => {
-        return userData ? <Component /> : <Redirect to="/login" />;
+        return currentUser ? <Component /> : <Redirect to="/login" />;
       }}
     />
   );

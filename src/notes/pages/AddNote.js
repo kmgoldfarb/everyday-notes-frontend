@@ -1,21 +1,24 @@
-import { Card, Form, Button, Container, Alert } from "react-bootstrap";
-import { useRef, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { useAuth } from "../../contexts/AuthContext";
-import { useHistory } from "react-router";
+import { Card, Form, Button, Container, Alert } from 'react-bootstrap';
+import { useRef, useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useAuth } from '../../contexts/AuthContext';
+import { useHistory } from 'react-router';
+import { auth } from '../../firebase';
 
 const AddNote = () => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const history = useHistory();
-  const { userId, token } = useAuth();
+  const { currentUser } = useAuth();
   const actionRef = useRef();
   const gratitudeRef = useRef();
   const journalRef = useRef();
   const moodRef = useRef();
+
+  console.log(currentUser);
 
   const imageSelectHandler = (event) => {
     if (event.target.files && event.target.files.length === 1) {
@@ -23,7 +26,7 @@ const AddNote = () => {
       console.log(selectedImage);
       setImage(selectedImage);
     } else {
-      alert("Please pick a valid image.");
+      alert('Please pick a valid image.');
     }
   };
 
@@ -32,20 +35,20 @@ const AddNote = () => {
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append("date", startDate);
-      formData.append("action", actionRef.current.value);
-      formData.append("gratitude", gratitudeRef.current.value);
-      formData.append("mood", moodRef.current.value);
-      formData.append("journal", journalRef.current.value);
-      formData.append("creator", userId);
+      formData.append('date', startDate);
+      formData.append('action', actionRef.current.value);
+      formData.append('gratitude', gratitudeRef.current.value);
+      formData.append('mood', moodRef.current.value);
+      formData.append('journal', journalRef.current.value);
+      formData.append('creator', currentUser.uid);
       if (image) {
-        formData.append("image", image);
+        formData.append('image', image);
       }
       await fetch(`${process.env.REACT_APP_SERVER_URL}/notes/add-note`, {
-        method: "POST",
+        method: 'POST',
         body: formData,
         headers: {
-          Authorization: "Bearer: " + token,
+          Authorization: 'Bearer: ' + currentUser.accessToken,
         },
       });
       setLoading(false);
@@ -54,13 +57,13 @@ const AddNote = () => {
       setError(err);
       setLoading(false);
     }
-    history.push("/dashboard");
+    history.push('/dashboard');
   };
 
   return (
     <Container
       className="align-items-center justify-content-center"
-      style={{ maxWidth: "800px" }}
+      style={{ maxWidth: '800px' }}
     >
       <Card>
         <Card.Body>
@@ -101,7 +104,7 @@ const AddNote = () => {
               />
               <Form.Text className="text-muted mt-1">
                 Do you need some help figuring out what you're feeling? Check
-                out{" "}
+                out{' '}
                 <a
                   href="https://feelingswheel.com/"
                   rel="noreferrer"
@@ -116,7 +119,7 @@ const AddNote = () => {
               <Form.Control
                 as="textarea"
                 placeholder="How were things today?"
-                style={{ height: "100px" }}
+                style={{ height: '100px' }}
                 ref={journalRef}
                 required
               />
