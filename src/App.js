@@ -1,6 +1,6 @@
 import './App.css';
-import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom';
-import React, { Suspense, useEffect } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Suspense } from 'react';
 import Signup from './user/pages/Signup';
 import Login from './user/pages/Login';
 import AddNote from './notes/pages/AddNote';
@@ -20,12 +20,12 @@ const ChangePassword = React.lazy(() =>
 
 function App() {
   const { currentUser } = useAuth();
-  const history = useHistory();
-  useEffect(() => {
-    if (currentUser) {
-      history.push('/dashboard');
-    }
-  }, []);
+  let home;
+  if (currentUser) {
+    home = <Route path="/" exact component={Dashboard} />;
+  } else {
+    home = <Route path="/" exact component={Landing} />;
+  }
 
   return (
     <BrowserRouter>
@@ -38,7 +38,7 @@ function App() {
         }
       >
         <Switch>
-          <Route path="/" exact component={Landing} />
+          {home}
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
           <Route path="/forgot-password" component={ForgotPassword} />
