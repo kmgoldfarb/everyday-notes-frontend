@@ -4,7 +4,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { useHistory } from 'react-router';
-import { auth } from '../../firebase';
 
 const AddNote = () => {
   const [error, setError] = useState('');
