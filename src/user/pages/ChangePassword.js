@@ -1,25 +1,23 @@
-import { useRef, useState } from "react";
-import { Card, Form, Button, Container, Alert, Modal } from "react-bootstrap";
-import { useAuth } from "../../contexts/AuthContext";
-import { useHistory } from "react-router";
+import { useRef, useState } from 'react';
+import { Card, Form, Button, Container, Alert, Modal } from 'react-bootstrap';
+import { useAuth } from '../../contexts/AuthContext';
+import { useHistory } from 'react-router';
 
 const ChangePassword = () => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [passwordSuccessModal, setPasswordSuccessModal] = useState(false);
-  const { changePassword } = useAuth();
+  const { changeUserPassword } = useAuth();
   const newPasswordRef = useRef();
   const newPasswordConfirmRef = useRef();
   const history = useHistory();
-  const userData = JSON.parse(localStorage.getItem("userData"));
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     if (newPasswordConfirmRef.current.value === newPasswordRef.current.value) {
       try {
-        console.log(newPasswordRef.current.value, userData.token);
-        await changePassword(newPasswordRef.current.value, userData.token);
+        await changeUserPassword(newPasswordRef.current.value);
         setLoading(false);
         setPasswordSuccessModal(true);
       } catch (err) {
@@ -32,13 +30,13 @@ const ChangePassword = () => {
 
   const hidePasswordSuccessModal = () => {
     setPasswordSuccessModal(false);
-    history.push("/dashboard");
+    history.push('/dashboard');
   };
 
   return (
     <Container
       className="align-items-center justify-content-center"
-      style={{ maxWidth: "500px" }}
+      style={{ maxWidth: '500px' }}
     >
       {setPasswordSuccessModal && !loading && (
         <Modal show={passwordSuccessModal} onHide={hidePasswordSuccessModal}>
@@ -52,7 +50,7 @@ const ChangePassword = () => {
             <Button
               variant="secondary"
               onClick={() => {
-                history.push("/dashboard");
+                history.push('/dashboard');
               }}
             >
               Go to dashboard
