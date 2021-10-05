@@ -1,6 +1,6 @@
 import './App.css';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import React, { Suspense } from 'react';
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
 import Signup from './user/pages/Signup';
 import Login from './user/pages/Login';
 import AddNote from './notes/pages/AddNote';
@@ -12,12 +12,21 @@ import SingleNote from './notes/pages/SingleNote';
 import ProtectedRoute from './shared/Navigation/ProtectedRoute';
 import NotFound from './shared/Navigation/NotFound';
 import ForgotPassword from './user/pages/ForgotPassword';
+import { useAuth } from './contexts/AuthContext';
 
 const ChangePassword = React.lazy(() =>
   import('./user/pages/ChangePassword.js')
 );
 
 function App() {
+  const { currentUser } = useAuth();
+  const history = useHistory();
+  useEffect(() => {
+    if (currentUser) {
+      history.push('/dashboard');
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <MainNav />
