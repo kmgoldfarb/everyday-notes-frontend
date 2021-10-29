@@ -45,50 +45,6 @@ const Signup = () => {
     history.push('/dashboard');
   }
 
-  /*  async function createUser(uid) {
-    await fetch(`${process.env.REACT_APP_SERVER_URL}/users/signup`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email: emailRef.current.value.toLowerCase(),
-        id: uid,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  } */
-
-  /* async function handleSubmit(event) {
-    event.preventDefault();
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError('Passwords do not match.');
-    }
-    try {
-      setError('');
-      setLoading(true);
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/users/signup`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            email: emailRef.current.value.toLowerCase(),
-            password: passwordRef.current.value,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      const responseData = await response.json();
-      login(responseData.userId, responseData.token);
-      history.push('/dashboard');
-    } catch (err) {
-      console.log(err);
-      setError('Failed to create account.');
-    }
-    setLoading(false);
-  } */
-
   return (
     <Container
       className="align-items-center justify-content-center"
