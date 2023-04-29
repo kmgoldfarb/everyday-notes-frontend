@@ -4,4 +4,3 @@ Upload daily journal entries that chronicle your actions, mood, gratitude, and t
 
 This code contains the frontend React app for this full stack application.
 
-<a href="https://everydaynotes.net">everydaynotes.net</a>
